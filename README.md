@@ -1,6 +1,6 @@
 # WavePacketSimulation
 
-## Wave packet simulation for 2D Hermitian Goldman model
+Wave packet simulation for 2D Hermitian Goldman model
 
 
 
