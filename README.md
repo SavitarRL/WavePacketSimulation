@@ -1,4 +1,4 @@
-# WavePacketSimulation
+# Wave Packet Simulation of the 2D Goldman fermionic model
 
 Wave packet simulation for 2D Hermitian Goldman fermionic model given below:
 
