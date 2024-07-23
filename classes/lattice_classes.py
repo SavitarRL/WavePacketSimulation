@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import cupy as cp
 #from tight_binding_approximation import *
 
 #Create 2-D Lattice. Numbers Represents Each Lattice Sites
@@ -13,18 +13,6 @@ class Lattice:
         array = np.append(lat, lat, axis=0)
         lattice = array[:-L_x, :]
         return lattice
-    
-    
-    #Respectively Site Coordinates on Lattice
-    # def site_coordinates(self):
-    #     arr = []
-    #     x_co = np.arange(self.L_x)
-    #     y_co = np.arange(self.L_y)
-    #     for j in range(len(x_co)):
-    #         for i in range(len(y_co)):
-    #             arr=np.append(arr, [x_co[i], y_co[j]])
-    #     xy = arr.reshape((self.L_x*self.L_y,2))
-    #     return arr, xy
     
     def __init__(self, L_x, L_y):
         self.L_x = L_x
@@ -43,6 +31,27 @@ class Lattice:
         # self.xy = self.site_coordinates()[1]
        
         self.lattice = self.create_lattice(L_x,L_y)
+
+class ParallelisedLattice(Lattice):
+    def __init__(self, L_x,L_y):
+        super().__init__(L_x,L_y)    
+
+        self.arr = cp.array([])
+        self.x_co = cp.arange(self.L_x)
+        self.y_co = cp.arange(self.L_y)
+
+        for j in range(len(self.x_co)):
+            for i in range(len(self.y_co)):
+                self.arr=cp.append(self.arr, [self.x_co[i], self.y_co[j]])
+        
+        self.xy = self.arr.reshape((self.L_x*self.L_y,2))
+    
+    def create_lattice(self, L_x, L_y):
+        lat = cp.arange(L_x*L_y).reshape(L_x,L_y)
+        array = cp.append(lat, lat, axis=0)
+        lattice = array[:-L_x, :]
+        return lattice
+    
     
 
 #Find neighbours Each Sites with Tight-Binding Approximation (But for Hard-Wall Boundary Conditions) 
